@@ -18,11 +18,21 @@ func main() {
 	defer nc.Close()
 
 	var count int
-	for {
+	subject := "task.q"
+	for i := 1; i < 10; i++ {
 		count++
 		message := fmt.Sprintf("Message %d: hello world", count)
-		nc.Publish("login", []byte(message))
+
+		err = nc.Publish(subject, []byte(message))
+		if err != nil {
+			log.Printf("Failed to publish message: %v", err)
+		} else {
+			log.Printf("Published: %s", message)
+		}
+
 		fmt.Printf("message publish %d\n", count)
 		time.Sleep(1 * time.Second)
 	}
+
+	fmt.Println("all messages published!")
 }
